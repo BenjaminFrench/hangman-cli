@@ -17,8 +17,9 @@ function Word(str) {
 // Return an array with the indexes of passed in letter object.
 // Index corresponds to index in the letters array in the Word object.
 // Returns empty array if none
-Word.prototype.indexesOf = function (letter) {
+Word.prototype.indexesOf = function (char) {
     var indexes = [];
+    var letter = new Letter(char);
     this.letters.forEach((element, index) => {
         if (element.isEqualTo(letter)) {
             indexes.push(index);
