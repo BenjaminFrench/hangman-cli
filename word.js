@@ -27,4 +27,11 @@ Word.prototype.indexesOf = function (letter) {
     return indexes;
 }
 
+Word.prototype.asString = function () {
+    var str = '';
+    this.letters.forEach(element => {
+        str += element.value;
+    });
+    return str;
+}
 module.exports = Word;
