@@ -26,3 +26,5 @@ Word.prototype.indexesOf = function (letter) {
     });
     return indexes;
 }
+
+module.exports = Word;
