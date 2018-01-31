@@ -35,4 +35,12 @@ Word.prototype.asString = function () {
     });
     return str;
 }
+
+Word.prototype.asCharArr = function () {
+    var charArr = [];
+    this.letters.forEach(element => {
+        charArr.push(element.value);
+    });
+    return charArr;
+}
 module.exports = Word;

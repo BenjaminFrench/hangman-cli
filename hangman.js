@@ -6,8 +6,8 @@ var Word = require('./word.js');
 var wordlist = [];
 
 var currentWord;
-var currentWordStr;
-var progress = '';
+var currentWordCharArr;
+var progressCharArr = [];
 var guessesRemaining;
 
 // Read wordlist from file. Words should be on their own line
@@ -23,25 +23,26 @@ fs.readFile("./wordlist.txt", 'utf-8', function(error, data) {
 
 function startGame() {
     guessesRemaining = 25;
+    progressCharArr = [];
     // choose a random word from the list
     currentWord = wordlist[Math.floor(Math.random() * wordlist.length)];
-    currentWordStr = currentWord.asString();
+    currentWordCharArr = currentWord.asCharArr();
 
     // Initialize progress string
-    for (char of currentWordStr) {
+    for (char of currentWordCharArr) {
         if (char !== ' ') {
-            progress += '_';
+            progressCharArr.push('_');
         }
         else {
-            progress += ' ';
+            progressCharArr.push(' ');
         }
     }
-    console.log(stringWithSpaces(progress));
+    console.log(stringWithSpaces(progressCharArr));
     console.log();
     askForGuess();
 }
 
-function askForGuess(params) {
+function askForGuess() {
     inquirer.prompt([
         {
             type: 'input',
@@ -60,7 +61,10 @@ function askForGuess(params) {
     ])
     .then(answers => {
         guessLetter(answers.letterGuessed);
-        console.log(stringWithSpaces(progress));
+        console.log();
+        console.log(stringWithSpaces(progressCharArr));
+        console.log();
+        askForGuess();
     });
 }
 
@@ -68,12 +72,12 @@ function guessLetter(char) {
     var occurences = currentWord.indexesOf(char);
     if (occurences.length > 0) {
         occurences.forEach(element => {
-            progress[element] = currentWordStr[element];
+            progressCharArr[element] = currentWordCharArr[element];
         });
 
     }
     else {
-
+        guessesRemaining--;
     }
 }
 
