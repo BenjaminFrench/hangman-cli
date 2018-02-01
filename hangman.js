@@ -9,7 +9,7 @@ var guessedAlready = [];
 var currentWord;
 var currentWordCharArr;
 var progressCharArr = [];
-var guessesRemaining;
+var guessesRemaining = 25;
 
 // Read wordlist from file. Words should be on their own line
 fs.readFile("./wordlist.txt", 'utf-8', function(error, data) {
@@ -23,8 +23,8 @@ fs.readFile("./wordlist.txt", 'utf-8', function(error, data) {
 });
 
 function startGame() {
-    guessesRemaining = 25;
     progressCharArr = [];
+    guessedAlready = [];
     // choose a random word from the list
     currentWord = wordlist[Math.floor(Math.random() * wordlist.length)];
     currentWordCharArr = currentWord.asCharArr();
@@ -66,7 +66,7 @@ function askForGuess() {
             console.log(stringWithSpaces(progressCharArr));
             console.log();
             console.log('You already guessed ' + answers.letterGuessed);
-            console.log(((guessesRemaining > 0) ? guessesRemaining : 0) + ' guesses remaining');
+            console.log(guessesRemaining + ' guesses remaining');
             console.log();
         }
         else {
@@ -84,7 +84,7 @@ function askForGuess() {
                 console.log();
                 console.log('Incorrect!!!');
                 console.log();
-                console.log(((guessesRemaining > 0) ? guessesRemaining : 0) + ' guesses remaining');
+                console.log(guessesRemaining + ' guesses remaining');
                 console.log();
             }
         }
@@ -119,6 +119,7 @@ function askForGuess() {
             ])
             .then(answers => {
                 if (answers.playAgain) {
+                    guessesRemaining = 25;
                     startGame();
                 }
                 else {
@@ -156,7 +157,7 @@ function checkForWin() {
 }
 
 function checkForLoss() {
-    if (guessesRemaining < 0) {
+    if (guessesRemaining < 1) {
         return true;
     }
     else {
