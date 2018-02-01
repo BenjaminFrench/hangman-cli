@@ -5,6 +5,7 @@ var Word = require('./word.js');
 // Array for word objects
 var wordlist = [];
 
+var guessedAlready = [];
 var currentWord;
 var currentWordCharArr;
 var progressCharArr = [];
@@ -60,11 +61,74 @@ function askForGuess() {
         }
     ])
     .then(answers => {
-        guessLetter(answers.letterGuessed);
-        console.log();
-        console.log(stringWithSpaces(progressCharArr));
-        console.log();
-        askForGuess();
+        if (guessedAlready.includes(answers.letterGuessed)) {
+            console.log();
+            console.log(stringWithSpaces(progressCharArr));
+            console.log();
+            console.log('You already guessed ' + answers.letterGuessed);
+            console.log(((guessesRemaining > 0) ? guessesRemaining : 0) + ' guesses remaining');
+            console.log();
+        }
+        else {
+            guessedAlready.push(answers.letterGuessed);
+            if (guessLetter(answers.letterGuessed)) {
+                console.log();
+                console.log(stringWithSpaces(progressCharArr));
+                console.log();
+                console.log('Correct!!!');
+                console.log();
+            }
+            else {
+                console.log();
+                console.log(stringWithSpaces(progressCharArr));
+                console.log();
+                console.log('Incorrect!!!');
+                console.log();
+                console.log(((guessesRemaining > 0) ? guessesRemaining : 0) + ' guesses remaining');
+                console.log();
+            }
+        }
+
+        if (checkForWin()) {
+            inquirer.prompt([
+                {
+                    type: 'confirm',
+                    name: 'playAgain',
+                    message: 'You Win! Play again?',
+                    default: false
+                }
+            ])
+            .then(answers => {
+                if (answers.playAgain) {
+                    startGame();
+                }
+                else {
+                    process.exit(0);
+                }
+            });
+        }
+        else if (checkForLoss()) {
+            // loss
+            inquirer.prompt([
+                {
+                    type: 'confirm',
+                    name: 'playAgain',
+                    message: 'You Lose! Play again?',
+                    default: false
+                }
+            ])
+            .then(answers => {
+                if (answers.playAgain) {
+                    startGame();
+                }
+                else {
+                    process.exit(0);
+                }
+            });
+        }
+        else {
+            askForGuess();
+        }
     });
 }
 
@@ -74,10 +138,29 @@ function guessLetter(char) {
         occurences.forEach(element => {
             progressCharArr[element] = currentWordCharArr[element];
         });
-
+        return true;
     }
     else {
         guessesRemaining--;
+        return false;
+    }
+}
+
+function checkForWin() {
+    if (progressCharArr.join('') === currentWord.asString()) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+function checkForLoss() {
+    if (guessesRemaining < 0) {
+        return true;
+    }
+    else {
+        return false;
     }
 }
 
