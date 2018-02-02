@@ -1,5 +1,12 @@
 function Letter(character) {
     this.value = character;
+
+    if (character === ' ') {
+        this.guessed = true;
+    }
+    else {
+        this.guessed = false;
+    }
 }
 
 // Compare a letter object to another letter object

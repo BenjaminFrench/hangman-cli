@@ -43,4 +43,43 @@ Word.prototype.asCharArr = function () {
     });
     return charArr;
 }
+
+Word.prototype.guessLetter = function (char) {
+    var occurences = this.indexesOf(char);
+    if (occurences.length > 0) {
+        occurences.forEach(element => {
+            this.letters[element].guessed = true;
+        });
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+Word.prototype.checkForWin = function () {
+    this.letters.forEach(element => {
+        if (!element.guessed) {
+            return false;
+        }
+    });
+    return true;
+}
+
+Word.prototype.print = function () {
+    var output = '';
+    this.letters.forEach(element => {
+        if (element.value === ' ') {
+            output += ' ';
+        }
+        else if (element.guessed) {
+            output += element.value;
+        } else {
+            output += '_';
+        }
+        output += ' ';
+    });
+    console.log(output);
+}
+
 module.exports = Word;

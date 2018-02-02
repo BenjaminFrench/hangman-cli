@@ -63,7 +63,7 @@ function askForGuess() {
     .then(answers => {
         if (guessedAlready.includes(answers.letterGuessed)) {
             console.log();
-            console.log(stringWithSpaces(progressCharArr));
+            currentWord.print();
             console.log();
             console.log('You already guessed ' + answers.letterGuessed);
             console.log(guessesRemaining + ' guesses remaining');
@@ -71,16 +71,17 @@ function askForGuess() {
         }
         else {
             guessedAlready.push(answers.letterGuessed);
-            if (guessLetter(answers.letterGuessed)) {
+            if (currentWord.guessLetter(answers.letterGuessed)) {
                 console.log();
-                console.log(stringWithSpaces(progressCharArr));
+                currentWord.print();
                 console.log();
                 console.log('Correct!!!');
                 console.log();
             }
             else {
+                guessesRemaining--;
                 console.log();
-                console.log(stringWithSpaces(progressCharArr));
+                currentWord.print();
                 console.log();
                 console.log('Incorrect!!!');
                 console.log();
@@ -89,7 +90,7 @@ function askForGuess() {
             }
         }
 
-        if (checkForWin()) {
+        if (currentWord.checkForWin()) {
             inquirer.prompt([
                 {
                     type: 'confirm',
@@ -131,20 +132,6 @@ function askForGuess() {
             askForGuess();
         }
     });
-}
-
-function guessLetter(char) {
-    var occurences = currentWord.indexesOf(char);
-    if (occurences.length > 0) {
-        occurences.forEach(element => {
-            progressCharArr[element] = currentWordCharArr[element];
-        });
-        return true;
-    }
-    else {
-        guessesRemaining--;
-        return false;
-    }
 }
 
 function checkForWin() {
